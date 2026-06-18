@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-hana-cream text-hana-text font-sans antialiased;
+    font-variant-numeric: tabular-nums;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply w-full py-3.5 rounded-xl text-white font-medium text-center
+           bg-gradient-to-r from-hana-wine to-hana-header
+           active:opacity-80 transition-opacity;
+  }
+
+  .btn-secondary {
+    @apply w-full py-3.5 rounded-xl font-medium text-center
+           border border-hana-border text-hana-text bg-hana-card
+           active:bg-hana-cream transition-colors;
+  }
+
+  .card {
+    @apply bg-hana-card rounded-2xl shadow-sm border border-hana-border;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-hana-text;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-hana-muted mt-0.5;
+  }
+}
+
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Safe area padding for notched devices */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .sticky.top-0 {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but keep scrollable */
+main::-webkit-scrollbar {
+  display: none;
+}
+main {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
