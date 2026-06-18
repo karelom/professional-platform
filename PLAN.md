@@ -127,8 +127,16 @@ app/
 - [x] 安裝 @iconify-json/lucide（本地 icon，消除 runtime 警告）
 - [x] Dev server 全 5 路由 HTTP 200 確認
 - [ ] 瀏覽器實測 + 視覺微調
-- [ ] Vercel 部署
+- [x] Vercel 部署 → **https://hanawu.vercel.app**
 - [ ] 手機實測（iPhone Safari + Android Chrome）
+
+#### 部署資訊
+
+- **線上 Demo**：https://hanawu.vercel.app
+- **Vercel 帳號**：karelom
+- **部署模式**：SPA（`ssr: false`），Vercel 自動偵測 Nuxt 框架
+- **更新方式**：`vercel deploy --prod`（或連結 Git repo 自動部署）
+- **注意**：SPA 模式下 WebFetch/爬蟲只看到空殼是正常的，內容由瀏覽器端 JS 渲染
 
 #### 踩坑紀錄
 

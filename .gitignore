@@ -26,3 +26,4 @@ logs
 # claude
 .claude
 claude.md
+.vercel
