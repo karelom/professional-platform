@@ -135,9 +135,9 @@ app/
 1. **Nuxt 組件命名去重**：`components/order/OrderHeader.vue` 的自動命名是 `OrderHeader`（不是 `OrderOrderHeader`）。Nuxt 偵測到檔名開頭已包含目錄名時會去重。同理 `review/ReviewCard.vue` → `ReviewCard`、`revenue/RevenueSummary.vue` → `RevenueSummary`。
 2. **Lucide icon 需本地安裝**：`@nuxt/icon` 預設從 CDN 拉 icon，dev 模式會有警告。加 `pnpm add -D @iconify-json/lucide` 改為本地解析，效能更好且離線可用。
 
-### Phase 0.5 — 轉原生 App（可選，視客戶需求）
+### Phase 0.5 — 轉原生 App（已實作 iOS）
 
-> 技術決策紀錄（2026-06-18 討論）
+> 技術決策紀錄（2026-06-18 討論）+ 實作紀錄
 
 **結論：用 Capacitor，不用 Flutter。**
 
@@ -147,21 +147,60 @@ app/
 | Flutter | 0%（全部重寫） | 4-6 週 | 需要高度客製原生動畫（本案不需要） |
 | React Native | 0%（全部重寫） | 3-5 週 | 團隊已有 RN 經驗（本案不適用） |
 
-**Capacitor 做法：**
-1. `pnpm add @capacitor/core @capacitor/cli` + `npx cap init`
-2. `npx cap add ios` / `npx cap add android`
-3. `nuxt generate` → `npx cap sync`
-4. Xcode / Android Studio build 出 `.ipa` / `.apk`
+**已完成的實作步驟：**
+- [x] 安裝 `@capacitor/core` `@capacitor/cli` `@capacitor/ios`（v8.4.0）
+- [x] 建立 `capacitor.config.ts`（appId: `com.yuflorist.hanawu`，webDir: `.output/public`）
+- [x] `nuxt.config.ts` 加上 `ssr: false` 改為 SPA 模式（Capacitor 需要靜態檔案）
+- [x] `pnpm generate` 產出靜態站到 `.output/public/`
+- [x] `npx cap add ios` 建立 iOS 原生專案
+- [x] `npx cap sync ios` 同步 web assets
+- [x] `npx cap open ios` 開啟 Xcode
 
-**額外獲得的原生能力：**
+**更新程式碼到 iPhone 的指令：**
+```bash
+pnpm generate && npx cap sync ios
+# 然後在 Xcode 按 ▶ Run
+```
+
+**在 Xcode 中裝到 iPhone 的步驟：**
+1. 左側導覽器點擊最頂層 **App**（藍色 project icon）
+2. 中間面板 → **Signing & Capabilities** tab → **Team** 下拉選你的 Apple ID
+3. 左上角設備選擇器選你的 iPhone（USB 接上）
+4. 按 ▶ Run
+5. 首次裝機：iPhone 設定 → 一般 → VPN 與裝置管理 → 信任開發者憑證
+
+**額外獲得的原生能力（未來可加）：**
 - `@capacitor/camera` — QR Code 掃描改用真相機
 - `@capacitor/push-notifications` — 推播通知
 - `@capacitor/filesystem` — 本地檔案存取
 
+**Android 也走同一條路（尚未實作，需要時加入）：**
+
+```bash
+npx cap add android         # 建立 Android 原生專案
+pnpm generate               # 產出靜態站
+npx cap sync android        # 同步 web assets
+npx cap open android        # 開啟 Android Studio
+```
+
+| 比較 | iOS | Android |
+|------|-----|---------|
+| IDE | Xcode | Android Studio |
+| 開發者帳號 | USD$99/年 | USD$25 一次性 |
+| 免費裝實機 | 7 天有效期 | 無限制，USB 直接裝 |
+| 開發平台限制 | macOS only | macOS / Windows / Linux |
+| 上架審核 | 1-2 週 | 1-3 天 |
+
 **注意事項：**
-- 需要 Apple Developer 帳號（年費 USD$99）+ Google Play 帳號（一次性 USD$25）
+- 個人免費 Apple ID 也能裝到自己 iPhone，有效期 7 天，到期重裝即可（Demo 夠用）
+- Android 更簡單 — 開啟 USB 偵錯就能裝，不需簽名或信任憑證
 - iOS 審核約 1-2 週，WebView App 有時會被挑剔，但有實質功能通常會過
-- 現有 Vue 組件、Tailwind 樣式、路由全部不用改
+- 現有 Vue 組件、Tailwind 樣式、路由 iOS / Android 完全共用，零修改
+
+#### 踩坑紀錄
+
+3. **Capacitor 8 預設用 SPM**：Capacitor 8.4.0 新專案預設使用 Swift Package Manager（不是 CocoaPods）。iOS 目錄下有 `CapApp-SPM/` 而非 `Podfile`。CocoaPods 已非必要，但裝了不影響。
+4. **Nuxt 需改為 SPA 模式**：Capacitor 載入的是本地靜態檔案，所以 `nuxt.config.ts` 必須加 `ssr: false`，並用 `pnpm generate` 產出到 `.output/public/`。
 
 ### Phase 1 — MVP（未來，需串後端）
 
