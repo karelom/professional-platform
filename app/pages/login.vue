@@ -1,15 +1,25 @@
 <template>
   <div class="space-y-6">
-    <!-- Step 1: 輸入手機號 -->
-    <div v-if="step === 'phone'" class="space-y-4">
-      <div>
+    <!-- Step 1: 輸入 email 或手機號 -->
+    <div v-if="step === 'input'" class="space-y-4">
+      <div v-if="authMode === 'email'">
+        <label class="form-label">Email</label>
+        <input
+          v-model="identifier"
+          type="email"
+          placeholder="your@email.com"
+          class="form-input"
+          @keydown.enter="handleSendOtp"
+        />
+      </div>
+      <div v-else>
         <label class="form-label">手機號碼</label>
         <div class="flex gap-2">
           <select v-model="countryCode" class="form-select w-24 flex-shrink-0">
             <option value="+886">+886</option>
           </select>
           <input
-            v-model="phoneNumber"
+            v-model="identifier"
             type="tel"
             placeholder="912345678"
             class="form-input flex-1"
@@ -24,7 +34,7 @@
 
     <!-- Step 2: 輸入驗證碼 -->
     <div v-else class="space-y-4">
-      <p class="text-sm text-hana-muted text-center">驗證碼已發送至 {{ fullPhone }}</p>
+      <p class="text-sm text-hana-muted text-center">驗證碼已發送至 {{ displayIdentifier }}</p>
       <div>
         <label class="form-label">驗證碼</label>
         <input
@@ -40,7 +50,9 @@
       <button class="btn-primary" :disabled="!canVerify || isVerifying" @click="handleVerifyOtp">
         {{ isVerifying ? '驗證中...' : '登入' }}
       </button>
-      <button class="btn-secondary" @click="step = 'phone'">重新輸入手機號</button>
+      <button class="btn-secondary" @click="step = 'input'">
+        重新輸入{{ authMode === 'email' ? ' Email' : '手機號' }}
+      </button>
     </div>
 
     <!-- Error message -->
@@ -57,19 +69,29 @@ definePageMeta({
   layout: 'auth',
 })
 
-const { sendOtp, verifyOtp, fetchProfile } = useAuth()
+const { sendOtp, verifyOtp, fetchProfile, authMode } = useAuth()
 const router = useRouter()
 
-const step = ref<'phone' | 'otp'>('phone')
+const step = ref<'input' | 'otp'>('input')
 const countryCode = ref('+886')
-const phoneNumber = ref('')
+const identifier = ref('')
 const otpCode = ref('')
 const isSending = ref(false)
 const isVerifying = ref(false)
 const errorMsg = ref('')
 
-const fullPhone = computed(() => `${countryCode.value}${phoneNumber.value}`)
-const canSendOtp = computed(() => phoneNumber.value.length >= 9)
+const fullIdentifier = computed(() =>
+  authMode === 'email' ? identifier.value : `${countryCode.value}${identifier.value}`,
+)
+
+const displayIdentifier = computed(() =>
+  authMode === 'email' ? identifier.value : `${countryCode.value} ${identifier.value}`,
+)
+
+const canSendOtp = computed(() =>
+  authMode === 'email' ? identifier.value.includes('@') : identifier.value.length >= 9,
+)
+
 const canVerify = computed(() => otpCode.value.length === 6)
 
 async function handleSendOtp() {
@@ -77,7 +99,7 @@ async function handleSendOtp() {
   errorMsg.value = ''
   isSending.value = true
   try {
-    await sendOtp(fullPhone.value)
+    await sendOtp(fullIdentifier.value)
     step.value = 'otp'
   } catch (e: unknown) {
     errorMsg.value = e instanceof Error ? e.message : '發送失敗，請稍後再試'
@@ -91,7 +113,7 @@ async function handleVerifyOtp() {
   errorMsg.value = ''
   isVerifying.value = true
   try {
-    await verifyOtp(fullPhone.value, otpCode.value)
+    await verifyOtp(fullIdentifier.value, otpCode.value)
     await fetchProfile()
     router.replace('/')
   } catch (e: unknown) {
