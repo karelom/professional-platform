@@ -1,8 +1,9 @@
-/** 全域 middleware：未登入導向 /login */
+/** 全域 middleware：未登入導向 /login，排除 /confirm（magic link callback） */
 export default defineNuxtRouteMiddleware((to) => {
   const user = useSupabaseUser()
+  const publicPages = ['/login', '/confirm']
 
-  if (!user.value && to.path !== '/login') {
+  if (!user.value && !publicPages.includes(to.path)) {
     return navigateTo('/login')
   }
 

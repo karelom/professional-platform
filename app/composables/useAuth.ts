@@ -1,7 +1,7 @@
 import type { ProfileDTO } from '~/types/dto'
 import { UserRole } from '~/types'
 
-/** 登入模式：正式版用 phone，開發/測試用 email */
+/** 登入模式：正式版用 phone（OTP），開發/測試用 email（magic link） */
 const AUTH_MODE: 'phone' | 'email' = 'email'
 
 /** 登入/登出/角色判斷/當前用戶 */
@@ -47,26 +47,34 @@ export function useAuth() {
   }
 
   /**
-   * 發送 OTP 驗證碼
-   * @param identifier email 或手機號碼（依 AUTH_MODE）
+   * 發送登入請求
+   * - email 模式：發送 magic link（用戶點信裡的連結自動登入）
+   * - phone 模式：發送 SMS OTP 驗證碼
    */
   async function sendOtp(identifier: string) {
-    const payload = authMode === 'email' ? { email: identifier } : { phone: identifier }
-    const { error } = await supabase.auth.signInWithOtp(payload)
-    if (error) throw error
+    if (authMode === 'email') {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: identifier,
+        options: { emailRedirectTo: `${window.location.origin}/confirm` },
+      })
+      if (error) throw error
+    } else {
+      const { error } = await supabase.auth.signInWithOtp({ phone: identifier })
+      if (error) throw error
+    }
   }
 
   /**
-   * 驗證 OTP 並登入
-   * @param identifier email 或手機號碼
+   * 驗證 OTP 並登入（僅 phone 模式使用）
+   * @param identifier 手機號碼
    * @param token 驗證碼
    */
   async function verifyOtp(identifier: string, token: string) {
-    const payload =
-      authMode === 'email'
-        ? { email: identifier, token, type: 'email' as const }
-        : { phone: identifier, token, type: 'sms' as const }
-    const { error } = await supabase.auth.verifyOtp(payload)
+    const { error } = await supabase.auth.verifyOtp({
+      phone: identifier,
+      token,
+      type: 'sms',
+    })
     if (error) throw error
     await fetchProfile()
   }
