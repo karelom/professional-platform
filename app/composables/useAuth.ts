@@ -23,17 +23,34 @@ export function useAuth() {
   const isArtisan = computed(() => profile.value?.role === UserRole.ARTISAN)
   const isLoggedIn = computed(() => !!user.value)
 
-  /** 載入用戶 profile（登入後呼叫） */
-  async function fetchProfile() {
-    if (!user.value) {
+  /**
+   * 載入用戶 profile（有快取，同一 user 不重複請求）
+   * @param force 強制重新載入（忽略快取）
+   */
+  async function fetchProfile(force: boolean = false) {
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser()
+
+    if (!authUser) {
       profile.value = null
       return
     }
-    const { data } = await supabase
+
+    if (!force && profile.value?.id === authUser.id) {
+      return
+    }
+
+    const { data, error } = await supabase
       .from('profiles')
       .select('id, name, phone, role, is_active')
-      .eq('id', user.value.id)
+      .eq('id', authUser.id)
       .single<ProfileDTO>()
+
+    if (error) {
+      console.error('[useAuth] fetchProfile failed:', error.message, '| user.id:', authUser.id)
+      return
+    }
 
     if (data) {
       profile.value = {
@@ -43,12 +60,14 @@ export function useAuth() {
         role: data.role as UserRole,
         isActive: data.is_active,
       }
+    } else {
+      console.warn('[useAuth] no profile found for user', authUser.id)
     }
   }
 
   /**
    * 發送登入請求
-   * - email 模式：發送 magic link（用戶點信裡的連結自動登入）
+   * - email 模式：發送 magic link
    * - phone 模式：發送 SMS OTP 驗證碼
    */
   async function sendOtp(identifier: string) {

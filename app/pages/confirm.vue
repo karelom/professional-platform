@@ -12,15 +12,13 @@ definePageMeta({
   layout: 'auth',
 })
 
-const { fetchProfile } = useAuth()
 const user = useSupabaseUser()
 const router = useRouter()
 
 watch(
   user,
-  async (newUser) => {
+  (newUser) => {
     if (newUser) {
-      await fetchProfile()
       router.replace('/')
     }
   },

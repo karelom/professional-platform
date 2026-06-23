@@ -274,3 +274,7 @@ npx cap open android        # 開啟 Android Studio
 7. **Supabase 型別**：不用 `database.types.ts`，改用 `.single<ProfileDTO>()` DTO 斷言，更乾淨。
 8. **CSS @import 順序**：`@import` 必須在 `@tailwind` 指令之前。
 9. **新增檔案後 IDE 報紅線**：新增 composable / util / component 後，`.nuxt/` 裡的型別定義還是舊的。跑 `npx nuxt prepare` 或重啟 dev server 讓 Nuxt 重新生成 `.nuxt/imports.d.ts` 和 `.nuxt/components.d.ts`，紅線就消失。
+10. **`useSupabaseUser().value.id` 可能是 undefined**：SPA 模式下 `useSupabaseUser()` 回傳的 user 物件可能還沒完全初始化（id 為 undefined）。解法：在 `fetchProfile` 裡用 `supabase.auth.getUser()` 直接從 server 取得可靠的 user id，不依賴 `useSupabaseUser()` 的 ref。
+11. **Middleware 執行時 profile 還沒載入**：全域 middleware 跑的時候 `profile` 可能還是 null。解法：middleware 裡加 `if (user && !profile) await fetchProfile()`，確保 profile 載入後再判斷角色。
+12. **Supabase 免費 email 限制 3 封/小時**：內建 email 服務硬限制無法調整。解法：接 Resend SMTP（免費 100 封/天）。
+13. **Magic link 轉導失敗**：magic link 回來的 URL 帶 token，但 auth middleware 在 session 建立前就攔截了。解法：新增 `/confirm` 頁面處理 callback，並排除在 auth middleware 之外。
