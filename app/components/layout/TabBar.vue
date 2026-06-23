@@ -17,13 +17,28 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const { isAdmin } = useAuth()
 
-const tabs = [
-  { icon: 'lucide:home', label: '首頁', to: '/' },
-  { icon: 'lucide:camera', label: '掃描接案', to: '/scan' },
-  { icon: 'lucide:check-square', label: '審核管理', to: '/review' },
-  { icon: 'lucide:coins', label: '我的分潤', to: '/revenue' },
-]
+const tabs = computed(() => {
+  const common = [
+    { icon: 'lucide:home', label: '首頁', to: '/' },
+    { icon: 'lucide:camera', label: '掃描接案', to: '/scan' },
+  ]
+
+  if (isAdmin.value) {
+    return [
+      ...common,
+      { icon: 'lucide:check-square', label: '審核管理', to: '/review' },
+      { icon: 'lucide:settings', label: '訂單管理', to: '/admin/orders' },
+    ]
+  }
+
+  return [
+    ...common,
+    { icon: 'lucide:eye', label: '審核狀態', to: '/review' },
+    { icon: 'lucide:coins', label: '我的分潤', to: '/revenue' },
+  ]
+})
 
 function isActive(to: string) {
   if (to === '/') return route.path === '/'

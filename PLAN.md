@@ -220,14 +220,57 @@ npx cap open android        # 開啟 Android Studio
 3. **Capacitor 8 預設用 SPM**：Capacitor 8.4.0 新專案預設使用 Swift Package Manager（不是 CocoaPods）。iOS 目錄下有 `CapApp-SPM/` 而非 `Podfile`。CocoaPods 已非必要，但裝了不影響。
 4. **Nuxt 需改為 SPA 模式**：Capacitor 載入的是本地靜態檔案，所以 `nuxt.config.ts` 必須加 `ssr: false`，並用 `pnpm generate` 產出到 `.output/public/`。
 
-### Phase 1 — MVP（未來，需串後端）
+### Phase 1 — MVP（進行中）
 
-> 以下為正式開發時的規劃，Demo 階段不實作。
+- [x] Supabase 專案建立 + init.sql 建表/RLS/Storage
+- [x] `@nuxtjs/supabase` 整合
+- [x] TypeScript 型別系統（enums + dto + utils + index）
+- [x] `utils/caseConverter.ts`（snakeToCamel / camelToSnake）
+- [x] CSS 拆分到 `assets/styles/` partials
+- [x] OTP 登入頁 + useAuth composable
+- [x] auth.global.ts + admin.ts middleware
+- [x] TabBar 角色適配（職人 4 tab / 管理員 4 tab）
+- [ ] 職人帳號管理頁
+- [ ] 商品模板管理頁
+- [ ] 訂單管理頁
+- [ ] 照片上傳（壓縮 + Supabase Storage）
+- [ ] 審核管理頁（真實操作）
+- [ ] 分潤管理頁 + 匯出 Excel
+- [ ] App 內通知
+- [ ] 整合測試 + 部署
 
-- [ ] Supabase 串接（DB + Auth + Storage）
-- [ ] 認證登入（LINE Login 或 OTP）
-- [ ] 真實 QR Code 掃描（html5-qrcode 或 Capacitor Camera）
-- [ ] 照片壓縮 + 雲端上傳
-- [ ] 審核結果持久化 + 通知（LINE Notify）
-- [ ] 分潤計算邏輯 + 對帳報表
-- [ ] 管理後台（商品講義 CMS + 訂單管理）
+---
+
+## 開發規範
+
+### Supabase 型別處理
+
+- **不使用 `database.types.ts`**。`@nuxtjs/supabase` 會找這個檔案，但我們不需要它。
+- **查詢結果用 DTO 斷言**：`supabase.from('profiles').select('*').single<ProfileDTO>()`，不靠 Database 泛型推導。
+- **composable 內做 DTO → Model 轉換**：用 `snakeToCamel<Order>(data)` 轉 camelCase，頁面只碰 Model 型別。
+- **寫回 DB 時**：用 `camelToSnake(data)` 轉回 snake_case。
+
+### CSS 架構
+
+- 共用樣式拆在 `assets/styles/_*.css`（buttons / cards / forms / badges / transitions / layout）。
+- `main.css` 用 `@import` 彙整，**`@import` 必須放在 `@tailwind` 之前**，否則 PostCSS 會報警告。
+
+### 命名規範
+
+- **Enum**: UPPER_SNAKE_CASE（`OrderStatus.DRAFT`）
+- **Property**: camelCase
+- **DTO**: snake_case（鏡像 DB），型別名稱以 `DTO` 結尾
+- **Model**: 用 `CamelCaseKeys<DTO>` 自動衍生，只 override enum 和 JOIN 欄位
+- **主要函式和型別加 JSDoc**
+
+### 踩坑紀錄
+
+1. **Nuxt 組件命名去重**：`components/order/OrderHeader.vue` → `OrderHeader`（不是 `OrderOrderHeader`）。Nuxt 偵測到檔名開頭包含目錄名時會去重。用 `.nuxt/components.d.ts` 確認實際名稱。
+2. **Lucide icon 需本地安裝**：`@nuxt/icon` 預設從 CDN 拉 icon，需加 `@iconify-json/lucide` 改為本地解析。
+3. **ESLint 需要 TypeScript**：`@nuxt/eslint` 解析 `<script lang="ts">` 需要 `typescript` 作為 devDependency，缺少時所有 Vue 檔都會報 parsing error。
+4. **SQL init.sql 建表順序**：`is_admin()` 引用 `profiles` 表，建表必須在函數之前。
+5. **Capacitor 8 預設用 SPM**：新專案用 Swift Package Manager，不是 CocoaPods。
+6. **Nuxt SPA + Capacitor**：`ssr: false` + `pnpm generate` 產出到 `.output/public/`。
+7. **Supabase 型別**：不用 `database.types.ts`，改用 `.single<ProfileDTO>()` DTO 斷言，更乾淨。
+8. **CSS @import 順序**：`@import` 必須在 `@tailwind` 指令之前。
+9. **新增檔案後 IDE 報紅線**：新增 composable / util / component 後，`.nuxt/` 裡的型別定義還是舊的。跑 `npx nuxt prepare` 或重啟 dev server 讓 Nuxt 重新生成 `.nuxt/imports.d.ts` 和 `.nuxt/components.d.ts`，紅線就消失。

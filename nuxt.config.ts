@@ -13,11 +13,7 @@ export default defineNuxtConfig({
   ],
 
   supabase: {
-    redirectOptions: {
-      login: '/login',
-      callback: '/',
-      exclude: ['/login'],
-    },
+    redirect: false,
   },
 
   css: ['~/assets/styles/main.css'],
