@@ -1,0 +1,13 @@
+@layer components {
+  .card {
+    @apply bg-hana-card rounded-2xl shadow-sm border border-hana-border;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-hana-text;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-hana-muted mt-0.5;
+  }
+}

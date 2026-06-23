@@ -1,0 +1,19 @@
+@layer components {
+  .btn-primary {
+    @apply w-full py-3.5 rounded-xl text-white font-medium text-center
+           bg-gradient-to-r from-hana-wine to-hana-header
+           active:opacity-80 transition-opacity;
+  }
+
+  .btn-secondary {
+    @apply w-full py-3.5 rounded-xl font-medium text-center
+           border border-hana-border text-hana-text bg-hana-card
+           active:bg-hana-cream transition-colors;
+  }
+
+  .btn-danger {
+    @apply w-full py-3.5 rounded-xl text-white font-medium text-center
+           bg-hana-danger
+           active:opacity-80 transition-opacity;
+  }
+}

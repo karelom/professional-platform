@@ -1,0 +1,10 @@
+@import './_layout.css';
+@import './_buttons.css';
+@import './_cards.css';
+@import './_forms.css';
+@import './_badges.css';
+@import './_transitions.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

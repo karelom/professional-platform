@@ -1,0 +1,26 @@
+@layer components {
+  .form-input {
+    @apply w-full px-4 py-2.5 rounded-lg border border-hana-border text-sm text-hana-text
+           bg-hana-card placeholder-hana-muted
+           focus:outline-none focus:border-hana-warning focus:ring-1 focus:ring-hana-warning/30
+           transition-colors;
+  }
+
+  .form-select {
+    @apply w-full px-4 py-2.5 rounded-lg border border-hana-border text-sm text-hana-text
+           bg-hana-card appearance-none
+           focus:outline-none focus:border-hana-warning focus:ring-1 focus:ring-hana-warning/30
+           transition-colors;
+  }
+
+  .form-textarea {
+    @apply w-full px-4 py-2.5 rounded-lg border border-hana-border text-sm text-hana-text
+           bg-hana-card placeholder-hana-muted resize-none
+           focus:outline-none focus:border-hana-warning focus:ring-1 focus:ring-hana-warning/30
+           transition-colors;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-hana-text mb-1;
+  }
+}
