@@ -2,279 +2,199 @@
 
 ## 專案概述
 
-YU Florist 客戶的「花寓職人平台」Demo — 將 mockup 轉化為可在手機上操作的互動 PWA。所有資料硬編碼，不串後端，目的是讓客戶體驗完整流程後再決定正式開發方向。
-
-## 技術選型
-
-| 項目 | 選擇                        | 原因                                  |
-| ---- | --------------------------- | ------------------------------------- |
-| 框架 | Nuxt 4 (Vue 3)              | 專案已建立，SSR/SSG/PWA 支援完整      |
-| CSS  | Tailwind CSS                | 開發速度快，自訂主題方便              |
-| 字體 | Noto Sans TC (Google Fonts) | 中文顯示品質好，免費                  |
-| Icon | @nuxt/icon (Lucide)         | 輕量、風格統一                        |
-| PWA  | @vite-pwa/nuxt              | standalone 模式，手機加到主畫面像 App |
-| 部署 | Vercel 免費方案             | 零成本 Demo                           |
-
-## 設計系統
-
-從 mockup 萃取的色彩 token（定義在 `tailwind.config.ts`）：
-
-```
-hana-header      #5C3344   深紫棕（header 背景漸層起點）
-hana-header-light #7A4558  深紫棕（header 背景漸層終點）
-hana-cream       #FAF6F0   頁面背景（米白）
-hana-wine        #4A2032   主按鈕、深色強調
-hana-gold        #8B6914   金額數字、重點資訊
-hana-card        #FFFFFF   卡片底色
-hana-text        #3D2B1F   主文字
-hana-muted       #8C7B75   次要文字
-hana-success     #5B8C5A   通過/綠色進度
-hana-warning     #D4A017   製作中/待處理
-hana-danger      #C0392B   退件/錯誤
-hana-border      #E8DDD5   卡片邊框/分隔線
-```
-
-## 專案結構
-
-```
-app/
-├── app.vue
-├── assets/css/main.css              # Tailwind directives + 全域樣式 + 頁面轉場
-├── layouts/default.vue              # Header + TabBar（sticky 頂部）+ <slot/>
-├── pages/
-│   ├── index.vue                    # 首頁儀表板
-│   ├── scan.vue                     # 掃描 QR Code
-│   ├── orders/[id].vue              # 訂單詳情 + 製作講義
-│   ├── review.vue                   # 審核管理中心
-│   └── revenue.vue                  # 我的分潤
-├── components/
-│   ├── layout/AppHeader.vue         # 花寓 logo + 大頭貼
-│   ├── layout/TabBar.vue            # 4-tab 導航（首頁/掃描/審核/分潤）
-│   ├── home/WelcomeBanner.vue       # 紫棕漸層歡迎卡
-│   ├── home/QuickActions.vue        # 2×2 快捷功能
-│   ├── home/TaskList.vue            # 進行中任務列表
-│   ├── order/OrderHeader.vue        # 商品資訊 + 標籤
-│   ├── order/InstructionTabs.vue    # 製作步驟/注意事項/品質標準 三 tab
-│   ├── order/PhotoUpload.vue        # 照片選取 + 預覽（前端 only）
-│   ├── review/ReviewCard.vue        # 審核卡片 + 通過/退件按鈕
-│   ├── revenue/RevenueSummary.vue   # 分潤大數字摘要
-│   ├── revenue/OrderProgress.vue    # 訂單進度 stepper 卡片
-│   ├── revenue/SettlementItem.vue   # 分潤明細單筆
-│   ├── ui/StatusBadge.vue           # 通用狀態標籤
-│   └── ui/ProgressStepper.vue       # 6 步驟進度條（接案→入帳）
-├── data/
-│   ├── dashboard.ts                 # 首頁 mock data
-│   ├── orders.ts                    # 訂單 + 講義 mock data
-│   ├── reviews.ts                   # 審核列表 mock data
-│   └── revenue.ts                   # 分潤 + 進度 + 明細 mock data
-```
-
-## 各頁面功能與互動
-
-### 首頁（`/`）
-
-- 歡迎卡片：「歡迎回來，秀美媽媽」+ 統計數字
-- 快捷功能 2×2 grid，點擊跳轉對應頁面
-- 進行中任務列表，點擊跳到訂單詳情
-
-### 掃描接案（`/scan`）
-
-- 模擬 QR Code 掃描框（CSS 動畫，不開真相機）
-- 「模擬掃描」按鈕：1.2 秒動畫後跳到 demo 訂單
-- 「手動輸入」備案入口
-
-### 訂單詳情（`/orders/[id]`）
-
-- 商品資訊 + 工藝標籤
-- 三 tab 講義（製作步驟含編號圓圈、注意事項、品質標準）
-- 照片上傳：可從手機相簿選取真實照片並顯示縮圖預覽（不上傳）
-- 送出/暫存按鈕觸發 toast 提示
-
-### 審核管理（`/review`）— Demo 重點
-
-- 篩選 tab：全部 / 待審核 / 已完成
-- 審核卡片含照片縮圖 + 狀態 badge
-- **按「通過」→ 卡片即時變綠**
-- **按「退件」→ 卡片即時變紅**
-- 寄件通知按鈕觸發 toast
-- 照片可點擊放大（lightbox overlay）
-- 卡片狀態切換有 transition 動畫
-
-### 我的分潤（`/revenue`）
-
-- 大數字摘要卡（本月累積、入帳日、上月對比、通過率）
-- 訂單進度：6 步驟 stepper（接案→製作→上傳→審核→寄件→入帳）
-- 分潤明細列表（正金額綠色、負金額紅色）
-
-## Demo 限制（已知，非 bug）
-
-- 所有資料硬編碼，重整頁面會回到初始狀態
-- 審核頁的狀態切換不會連動到其他頁面
-- 照片上傳只在前端預覽，不實際儲存
-- QR Code 掃描是模擬動畫，不開真相機
-- PWA icon 目前是 placeholder，正式版需替換
-
-## 開發進度
-
-### Phase 0 — Demo UI 殼（當前）
-
-- [x] 專案初始化 + Tailwind + PWA + 字體設定
-- [x] Mock data 4 個檔案
-- [x] Layout（AppHeader + TabBar）
-- [x] 首頁（WelcomeBanner + QuickActions + TaskList）
-- [x] 掃描頁（ScanFrame + 模擬掃描 + 手動輸入）
-- [x] 訂單詳情（OrderHeader + InstructionTabs + PhotoUpload + toast）
-- [x] 審核管理（ReviewCard + 即時狀態切換 + lightbox + toast）
-- [x] 我的分潤（RevenueSummary + ProgressStepper + SettlementItem）
-- [x] 頁面轉場動畫 + safe area 支援
-- [x] Build 通過（零錯誤）
-- [x] 修正 Nuxt 組件自動命名去重問題（OrderOrderHeader → OrderHeader 等）
-- [x] 安裝 @iconify-json/lucide（本地 icon，消除 runtime 警告）
-- [x] Dev server 全 5 路由 HTTP 200 確認
-- [ ] 瀏覽器實測 + 視覺微調
-- [x] Vercel 部署 → **https://hanawu.vercel.app**
-- [ ] 手機實測（iPhone Safari + Android Chrome）
-
-#### 部署資訊
+YU Florist 的「花寓職人平台」— 管理員派發訂單給職人，職人製作後上傳成品照審核，通過後寄回基地結算分潤。
 
 - **線上 Demo**：https://hanawu.vercel.app
 - **Vercel 帳號**：karelom
-- **部署模式**：SPA（`ssr: false`），Vercel 自動偵測 Nuxt 框架
-- **更新方式**：`vercel deploy --prod`（或連結 Git repo 自動部署）
-- **注意**：SPA 模式下 WebFetch/爬蟲只看到空殼是正常的，內容由瀏覽器端 JS 渲染
+- **Supabase 專案**：`nopulrmtnpavzqdbgduv`
+- **部署模式**：SPA（`ssr: false`）+ Vercel
+- **更新部署**：`vercel deploy --prod`
 
-#### 踩坑紀錄
+## 技術選型
 
-1. **Nuxt 組件命名去重**：`components/order/OrderHeader.vue` 的自動命名是 `OrderHeader`（不是 `OrderOrderHeader`）。Nuxt 偵測到檔名開頭已包含目錄名時會去重。同理 `review/ReviewCard.vue` → `ReviewCard`、`revenue/RevenueSummary.vue` → `RevenueSummary`。
-2. **Lucide icon 需本地安裝**：`@nuxt/icon` 預設從 CDN 拉 icon，dev 模式會有警告。加 `pnpm add -D @iconify-json/lucide` 改為本地解析，效能更好且離線可用。
+| 項目 | 選擇 | 原因 |
+|------|------|------|
+| 框架 | Nuxt 4 (Vue 3) | SSR/SSG/PWA 完整支援 |
+| CSS | Tailwind CSS | 自訂 `hana-*` 色彩主題 |
+| DB / Auth / Storage | Supabase 免費方案 | 一站搞定，10 人規模可撐 20 個月 |
+| 行動裝置 | Capacitor 8 (SPM) | 現有程式碼 95% 復用 |
+| 部署 | Vercel 免費方案 | 零主機費 |
 
-### Phase 0.5 — 轉原生 App（已實作 iOS）
+## 開發進度
 
-> 技術決策紀錄（2026-06-18 討論）+ 實作紀錄
+### Phase 0 — Demo UI 殼 ✅
 
-**結論：用 Capacitor，不用 Flutter。**
+5 頁面 + 15 組件，高度還原 mockup，資料硬編碼。
 
-| 路徑                  | 現有程式碼復用率 | 額外工時 | 適合場景                           |
-| --------------------- | ---------------- | -------- | ---------------------------------- |
-| **Capacitor（推薦）** | ~95%             | 1-2 天   | 需要上架 App Store / Google Play   |
-| Flutter               | 0%（全部重寫）   | 4-6 週   | 需要高度客製原生動畫（本案不需要） |
-| React Native          | 0%（全部重寫）   | 3-5 週   | 團隊已有 RN 經驗（本案不適用）     |
-
-**已完成的實作步驟：**
-
-- [x] 安裝 `@capacitor/core` `@capacitor/cli` `@capacitor/ios`（v8.4.0）
-- [x] 建立 `capacitor.config.ts`（appId: `com.yuflorist.hanawu`，webDir: `.output/public`）
-- [x] `nuxt.config.ts` 加上 `ssr: false` 改為 SPA 模式（Capacitor 需要靜態檔案）
-- [x] `pnpm generate` 產出靜態站到 `.output/public/`
-- [x] `npx cap add ios` 建立 iOS 原生專案
-- [x] `npx cap sync ios` 同步 web assets
-- [x] `npx cap open ios` 開啟 Xcode
-
-**更新程式碼到 iPhone 的指令：**
+### Phase 0.5 — Capacitor iOS ✅
 
 ```bash
-pnpm generate && npx cap sync ios
-# 然後在 Xcode 按 ▶ Run
+pnpm generate && npx cap sync ios  # 更新後在 Xcode 按 Run
 ```
-
-**在 Xcode 中裝到 iPhone 的步驟：**
-
-1. 左側導覽器點擊最頂層 **App**（藍色 project icon）
-2. 中間面板 → **Signing & Capabilities** tab → **Team** 下拉選你的 Apple ID
-3. 左上角設備選擇器選你的 iPhone（USB 接上）
-4. 按 ▶ Run
-5. 首次裝機：iPhone 設定 → 一般 → VPN 與裝置管理 → 信任開發者憑證
-
-**額外獲得的原生能力（未來可加）：**
-
-- `@capacitor/camera` — QR Code 掃描改用真相機
-- `@capacitor/push-notifications` — 推播通知
-- `@capacitor/filesystem` — 本地檔案存取
-
-**Android 也走同一條路（尚未實作，需要時加入）：**
-
-```bash
-npx cap add android         # 建立 Android 原生專案
-pnpm generate               # 產出靜態站
-npx cap sync android        # 同步 web assets
-npx cap open android        # 開啟 Android Studio
-```
-
-| 比較         | iOS        | Android                 |
-| ------------ | ---------- | ----------------------- |
-| IDE          | Xcode      | Android Studio          |
-| 開發者帳號   | USD$99/年  | USD$25 一次性           |
-| 免費裝實機   | 7 天有效期 | 無限制，USB 直接裝      |
-| 開發平台限制 | macOS only | macOS / Windows / Linux |
-| 上架審核     | 1-2 週     | 1-3 天                  |
-
-**注意事項：**
-
-- 個人免費 Apple ID 也能裝到自己 iPhone，有效期 7 天，到期重裝即可（Demo 夠用）
-- Android 更簡單 — 開啟 USB 偵錯就能裝，不需簽名或信任憑證
-- iOS 審核約 1-2 週，WebView App 有時會被挑剔，但有實質功能通常會過
-- 現有 Vue 組件、Tailwind 樣式、路由 iOS / Android 完全共用，零修改
-
-#### 踩坑紀錄
-
-3. **Capacitor 8 預設用 SPM**：Capacitor 8.4.0 新專案預設使用 Swift Package Manager（不是 CocoaPods）。iOS 目錄下有 `CapApp-SPM/` 而非 `Podfile`。CocoaPods 已非必要，但裝了不影響。
-4. **Nuxt 需改為 SPA 模式**：Capacitor 載入的是本地靜態檔案，所以 `nuxt.config.ts` 必須加 `ssr: false`，並用 `pnpm generate` 產出到 `.output/public/`。
 
 ### Phase 1 — MVP（進行中）
 
-- [x] Supabase 專案建立 + init.sql 建表/RLS/Storage
+**已完成：**
+- [x] Supabase 專案 + init.sql（6 張表 + RLS + Storage + 索引 + 觸發器）
 - [x] `@nuxtjs/supabase` 整合
-- [x] TypeScript 型別系統（enums + dto + utils + index）
+- [x] TypeScript 型別系統（enums → dto → utils/CamelCaseKeys → index）
 - [x] `utils/caseConverter.ts`（snakeToCamel / camelToSnake）
 - [x] CSS 拆分到 `assets/styles/` partials
-- [x] OTP 登入頁 + useAuth composable
-- [x] auth.global.ts + admin.ts middleware
+- [x] Email magic link 登入 + `/confirm` callback 頁
+- [x] `useAuth` composable（fetchProfile 有快取 + getUser 取可靠 id）
+- [x] `useGuard` composable（denyWith 統一轉導提示）
+- [x] `auth.global.ts`（唯一載入 profile 的入口 + session 無效自動登出）
+- [x] `admin.ts` middleware（只讀 isAdmin，不呼叫 fetchProfile）
 - [x] TabBar 角色適配（職人 4 tab / 管理員 4 tab）
-- [ ] 職人帳號管理頁
-- [ ] 商品模板管理頁
-- [ ] 訂單管理頁
+- [x] 職人帳號管理頁（`/admin/artisans`）+ server API（create / toggle）
+- [x] 管理員帳號建立（David, role=admin）
+
+**待做：**
+- [ ] 商品模板管理頁（`/admin/products`）
+- [ ] 訂單管理頁（`/admin/orders`）+ QR Code 生成
 - [ ] 照片上傳（壓縮 + Supabase Storage）
-- [ ] 審核管理頁（真實操作）
+- [ ] 審核管理頁（真實操作 + 退件率）
 - [ ] 分潤管理頁 + 匯出 Excel
 - [ ] App 內通知
 - [ ] 整合測試 + 部署
 
 ---
 
-## 開發規範
+## 驗證流程架構
 
-### Supabase 型別處理
+### 三個 API 的定位
 
-- **不使用 `database.types.ts`**。`@nuxtjs/supabase` 會找這個檔案，但我們不需要它。
-- **查詢結果用 DTO 斷言**：`supabase.from('profiles').select('*').single<ProfileDTO>()`，不靠 Database 泛型推導。
-- **composable 內做 DTO → Model 轉換**：用 `snakeToCamel<Order>(data)` 轉 camelCase，頁面只碰 Model 型別。
-- **寫回 DB 時**：用 `camelToSnake(data)` 轉回 snake_case。
+| API | 用途 | 何時用 |
+|-----|------|--------|
+| `useSupabaseUser()` | 快速判斷有沒有 session（不發 request） | middleware 判斷跳不跳 /login |
+| `supabase.auth.getUser()` | 向 server 驗證 JWT，取可靠 user.id | fetchProfile 內部 |
+| `fetchProfile()` | 查 DB 拿 name/role/isActive，存 useState 快取 | **只由 auth.global.ts 呼叫** |
 
-### CSS 架構
+### 流程
 
-- 共用樣式拆在 `assets/styles/_*.css`（buttons / cards / forms / badges / transitions / layout）。
-- `main.css` 用 `@import` 彙整，**`@import` 必須放在 `@tailwind` 之前**，否則 PostCSS 會報警告。
+```
+auth.global.ts（每次路由切換，最早跑）
+  ├── !user && 非公開頁面 → denyWith('請先登入', '/login')
+  ├── user && path === '/login' → navigateTo('/')
+  └── user && !profile → await fetchProfile()
+        ├── getUser() null → session 無效 → signOut + 跳 /login
+        └── 成功 → 存 profile → 繼續
 
-### 命名規範
+admin.ts（auth.global 之後跑，profile 保證已載入）
+  └── !isAdmin → denyWith('您沒有管理員權限')
 
-- **Enum**: UPPER_SNAKE_CASE（`OrderStatus.DRAFT`）
-- **Property**: camelCase
-- **DTO**: snake_case（鏡像 DB），型別名稱以 `DTO` 結尾
-- **Model**: 用 `CamelCaseKeys<DTO>` 自動衍生，只 override enum 和 JOIN 欄位
+其他所有地方（TabBar, 頁面, 組件）→ 只讀 profile / isAdmin / isArtisan
+```
+
+### 登入模式
+
+| 模式 | 設定 | 用途 |
+|------|------|------|
+| Email magic link | `AUTH_MODE = 'email'`（目前） | 開發測試用，免費 |
+| 手機 SMS OTP | `AUTH_MODE = 'phone'` | 正式上線用，需接 Twilio（~NT$1.5/則） |
+
+切換只改 `useAuth.ts` 的 `AUTH_MODE` 常數 + `login.vue` 自動適配。
+
+---
+
+## 資料庫（6 張表）
+
+`supabase/init.sql` 一次執行。順序：建表 → 函數 → 索引 → RLS → Storage → 觸發器。
+
+| 表 | 用途 |
+|----|------|
+| `profiles` | 用戶帳號（id 綁 auth.users，role: admin/artisan，is_active） |
+| `products` | 商品講義模板（steps/notes/quality 分三個 jsonb 欄位） |
+| `orders` | 訂單（從模板複製講義後脫鉤，含 cancel_reason） |
+| `submissions` | 送審紀錄（一筆訂單可多次送審，退件次數用 COUNT 算） |
+| `settlements` | 分潤記錄（shipping_status + payment_status） |
+| `notifications` | App 內通知（user_id + is_read） |
+
+### RLS 規則摘要
+
+- 職人只看自己的 orders / submissions / settlements
+- 管理員看全部 + 可寫
+- `is_admin()` 函數用 `SECURITY DEFINER` 繞過 RLS 自引用
+
+### 訂單狀態
+
+```
+draft → accepted → reviewing → approved → shipping → settled
+                       ↓
+                   rejected → reviewing（循環）
+任何狀態 → cancelled（需填原因，接單後不可逆）
+```
+
+可換人/可改內容：`draft` / `accepted` / `rejected`
+鎖定：`reviewing` 以後（備註除外）
+
+---
+
+## 前端架構
+
+### 目錄結構（現在實際狀態）
+
+```
+app/
+├── app.vue                              # 純 layout 殼，不做 auth 邏輯
+├── assets/styles/                       # CSS partials（@import 在 @tailwind 之前）
+├── layouts/
+│   ├── default.vue                      # Header + TabBar + slot
+│   └── auth.vue                         # 登入頁 layout（只有 logo）
+├── middleware/
+│   ├── auth.global.ts                   # 唯一載入 profile 的地方
+│   └── admin.ts                         # 只讀 isAdmin
+├── pages/
+│   ├── login.vue                        # Email magic link / Phone OTP（依 AUTH_MODE）
+│   ├── confirm.vue                      # Magic link callback（等 user 出現後跳 /）
+│   ├── index.vue, scan.vue, review.vue, revenue.vue
+│   ├── orders/[id].vue
+│   └── admin/artisans.vue               # ✅ 已完成
+├── composables/
+│   ├── useAuth.ts                       # fetchProfile（有快取 + getUser）、sendOtp、signOut
+│   ├── useGuard.ts                      # denyWith(reason, redirectTo)
+│   └── useArtisans.ts                   # 職人 CRUD + 退件率統計
+├── components/
+│   ├── layout/AppHeader.vue, TabBar.vue # TabBar 依角色動態顯示
+│   ├── admin/ArtisanForm.vue            # ✅ 已完成
+│   └── （Demo 組件保留，待改為從 DB 讀取）
+├── types/
+│   ├── enums.ts                         # UPPER_SNAKE_CASE enum
+│   ├── dto.ts                           # 鏡像 DB snake_case（文件用途）
+│   ├── utils.ts                         # CamelCaseKeys<T> 型別轉換器
+│   └── index.ts                         # 前端 Model = CamelCaseKeys<DTO> + enum override
+├── utils/caseConverter.ts               # snakeToCamel / camelToSnake
+└── data/                                # Demo mock data（待刪除，被 composable + DB 取代）
+
+server/api/admin/
+├── create-artisan.post.ts               # service_role 建帳號
+└── toggle-artisan.post.ts               # 停用/啟用
+```
+
+### 設計規範
+
+- **Supabase 查詢用 DTO 斷言**：`.single<ProfileDTO>()`，不用 database.types.ts
+- **Composable 內做 DTO → Model 轉換**：`snakeToCamel<Order>(data)`
+- **單一入口原則**：fetchProfile 只在 auth.global.ts 呼叫，其他只讀
+- **useGuard.denyWith()** 統一處理轉導提示
+- **Enum**: UPPER_SNAKE_CASE，**Property**: camelCase
 - **主要函式和型別加 JSDoc**
+- **CSS**: 共用放 `_*.css`，組件特有用 scoped style
 
-### 踩坑紀錄
+---
 
-1. **Nuxt 組件命名去重**：`components/order/OrderHeader.vue` → `OrderHeader`（不是 `OrderOrderHeader`）。Nuxt 偵測到檔名開頭包含目錄名時會去重。用 `.nuxt/components.d.ts` 確認實際名稱。
-2. **Lucide icon 需本地安裝**：`@nuxt/icon` 預設從 CDN 拉 icon，需加 `@iconify-json/lucide` 改為本地解析。
-3. **ESLint 需要 TypeScript**：`@nuxt/eslint` 解析 `<script lang="ts">` 需要 `typescript` 作為 devDependency，缺少時所有 Vue 檔都會報 parsing error。
-4. **SQL init.sql 建表順序**：`is_admin()` 引用 `profiles` 表，建表必須在函數之前。
-5. **Capacitor 8 預設用 SPM**：新專案用 Swift Package Manager，不是 CocoaPods。
-6. **Nuxt SPA + Capacitor**：`ssr: false` + `pnpm generate` 產出到 `.output/public/`。
-7. **Supabase 型別**：不用 `database.types.ts`，改用 `.single<ProfileDTO>()` DTO 斷言，更乾淨。
-8. **CSS @import 順序**：`@import` 必須在 `@tailwind` 指令之前。
-9. **新增檔案後 IDE 報紅線**：新增 composable / util / component 後，`.nuxt/` 裡的型別定義還是舊的。跑 `npx nuxt prepare` 或重啟 dev server 讓 Nuxt 重新生成 `.nuxt/imports.d.ts` 和 `.nuxt/components.d.ts`，紅線就消失。
-10. **`useSupabaseUser().value.id` 可能是 undefined**：SPA 模式下 `useSupabaseUser()` 回傳的 user 物件可能還沒完全初始化（id 為 undefined）。解法：在 `fetchProfile` 裡用 `supabase.auth.getUser()` 直接從 server 取得可靠的 user id，不依賴 `useSupabaseUser()` 的 ref。
-11. **Middleware 執行時 profile 還沒載入**：全域 middleware 跑的時候 `profile` 可能還是 null。解法：middleware 裡加 `if (user && !profile) await fetchProfile()`，確保 profile 載入後再判斷角色。
-12. **Supabase 免費 email 限制 3 封/小時**：內建 email 服務硬限制無法調整。解法：接 Resend SMTP（免費 100 封/天）。
-13. **Magic link 轉導失敗**：magic link 回來的 URL 帶 token，但 auth middleware 在 session 建立前就攔截了。解法：新增 `/confirm` 頁面處理 callback，並排除在 auth middleware 之外。
+## 踩坑紀錄
+
+1. **Nuxt 組件命名去重**：`order/OrderHeader.vue` → `OrderHeader`。用 `.nuxt/components.d.ts` 確認。
+2. **Lucide icon 需 `@iconify-json/lucide`**。
+3. **ESLint 需 `typescript` devDependency**。
+4. **init.sql 建表在函數之前**（`is_admin()` 引用 profiles）。
+5. **Capacitor 8 預設 SPM**（不是 CocoaPods）。
+6. **SPA + Capacitor**：`ssr: false` + `pnpm generate`。
+7. **不用 `database.types.ts`**，改用 `.single<DTO>()` 斷言。
+8. **CSS `@import` 在 `@tailwind` 之前**。
+9. **新增檔案後跑 `npx nuxt prepare`** 重新生成型別。
+10. **`useSupabaseUser().id` 可能 undefined**：用 `getUser()` 取可靠 id。
+11. **Profile 載入散布多處 → 時序問題**：收攏到 auth.global.ts 單一入口。
+12. **Supabase 免費 email 3 封/小時**：接 Resend SMTP 解除。
+13. **Magic link 轉導失敗**：加 `/confirm` 頁面 + 排除在 auth middleware 外。
