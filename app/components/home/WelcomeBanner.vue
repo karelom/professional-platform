@@ -3,7 +3,7 @@
     <div class="relative z-10">
       <h2 class="text-lg font-bold">歡迎回來，{{ profile.name }} 👋</h2>
       <p class="text-xs text-white/70 mt-0.5">
-        你已是花窩認證職人 · 累計製作 {{ profile.totalWorks }} 件作品
+        你已是花寓認證職人 · 累計製作 {{ profile.totalWorks }} 件作品
       </p>
       <div class="flex gap-6 mt-4">
         <div class="text-center">

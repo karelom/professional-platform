@@ -11,13 +11,16 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
   ],
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/styles/main.css'],
 
   app: {
     head: {
-      title: '花窩 — YU Florist 職人平台',
+      title: '花寓 — YU Florist 職人平台',
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no' },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no',
+        },
         { name: 'apple-mobile-web-app-capable', content: 'yes' },
         { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
       ],
@@ -35,8 +38,8 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      name: '花窩職人平台',
-      short_name: '花窩',
+      name: '花寓職人平台',
+      short_name: '花寓',
       description: 'YU Florist 手作職人管理平台',
       theme_color: '#5C3344',
       background_color: '#FAF6F0',

@@ -1,8 +1,8 @@
-# 花窩職人平台 — 開發計畫與進度紀錄
+# 花寓職人平台 — 開發計畫與進度紀錄
 
 ## 專案概述
 
-YU Florist 客戶的「花窩職人平台」Demo — 將 mockup 轉化為可在手機上操作的互動 PWA。所有資料硬編碼，不串後端，目的是讓客戶體驗完整流程後再決定正式開發方向。
+YU Florist 客戶的「花寓職人平台」Demo — 將 mockup 轉化為可在手機上操作的互動 PWA。所有資料硬編碼，不串後端，目的是讓客戶體驗完整流程後再決定正式開發方向。
 
 ## 技術選型
 
@@ -48,7 +48,7 @@ app/
 │   ├── review.vue                   # 審核管理中心
 │   └── revenue.vue                  # 我的分潤
 ├── components/
-│   ├── layout/AppHeader.vue         # 花窩 logo + 大頭貼
+│   ├── layout/AppHeader.vue         # 花寓 logo + 大頭貼
 │   ├── layout/TabBar.vue            # 4-tab 導航（首頁/掃描/審核/分潤）
 │   ├── home/WelcomeBanner.vue       # 紫棕漸層歡迎卡
 │   ├── home/QuickActions.vue        # 2×2 快捷功能
