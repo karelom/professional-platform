@@ -4,19 +4,7 @@
 -- ============================================================
 
 -- ------------------------------------------------------------
--- 1. 輔助函數
--- ------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION is_admin()
-RETURNS boolean AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  );
-$$ LANGUAGE sql SECURITY DEFINER;
-
--- ------------------------------------------------------------
--- 2. 建表
+-- 1. 建表（先建表，函數才能引用）
 -- ------------------------------------------------------------
 
 -- profiles（用戶資料，與 auth.users 綁定）
@@ -113,6 +101,18 @@ CREATE TABLE notifications (
   is_read     boolean NOT NULL DEFAULT false,
   created_at  timestamptz NOT NULL DEFAULT now()
 );
+
+-- ------------------------------------------------------------
+-- 2. 輔助函數（建表後才能建立，因為引用了 profiles）
+-- ------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS boolean AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+$$ LANGUAGE sql SECURITY DEFINER;
 
 -- ------------------------------------------------------------
 -- 3. 索引（常用查詢加速）

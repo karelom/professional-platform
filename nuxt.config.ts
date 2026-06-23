@@ -9,7 +9,16 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxtjs/google-fonts',
     '@vite-pwa/nuxt',
+    '@nuxtjs/supabase',
   ],
+
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/',
+      exclude: ['/login'],
+    },
+  },
 
   css: ['~/assets/styles/main.css'],
 
