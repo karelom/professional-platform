@@ -51,8 +51,15 @@ export const reviews: ReviewItem[] = [
   },
 ]
 
-export const reviewStatusConfig: Record<ReviewStatus, { label: string; class: string; cardClass: string }> = {
+export const reviewStatusConfig: Record<
+  ReviewStatus,
+  { label: string; class: string; cardClass: string }
+> = {
   pending: { label: '待審核', class: 'bg-amber-100 text-amber-700', cardClass: '' },
-  approved: { label: '已通過', class: 'bg-emerald-100 text-emerald-700', cardClass: 'bg-emerald-50/50' },
+  approved: {
+    label: '已通過',
+    class: 'bg-emerald-100 text-emerald-700',
+    cardClass: 'bg-emerald-50/50',
+  },
   rejected: { label: '退件修改', class: 'bg-red-100 text-red-700', cardClass: 'bg-red-50/50' },
 }

@@ -6,9 +6,11 @@
         v-for="tab in tabs"
         :key="tab.key"
         class="flex-1 py-2 text-xs font-medium rounded-md transition-all duration-200"
-        :class="activeTab === tab.key
-          ? 'bg-hana-wine text-white shadow-sm'
-          : 'text-hana-muted hover:text-hana-text'"
+        :class="
+          activeTab === tab.key
+            ? 'bg-hana-wine text-white shadow-sm'
+            : 'text-hana-muted hover:text-hana-text'
+        "
         @click="activeTab = tab.key"
       >
         {{ tab.label }}
@@ -20,7 +22,9 @@
       <!-- 製作步驟 -->
       <div v-if="activeTab === 'steps'" class="space-y-4">
         <div v-for="(step, i) in order.steps" :key="i" class="flex gap-3">
-          <div class="w-7 h-7 rounded-full bg-hana-wine text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div
+            class="w-7 h-7 rounded-full bg-hana-wine text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5"
+          >
             {{ i + 1 }}
           </div>
           <p class="text-sm text-hana-text leading-relaxed">{{ step.title }}</p>

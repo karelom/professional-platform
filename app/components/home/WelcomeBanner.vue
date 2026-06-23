@@ -1,5 +1,7 @@
 <template>
-  <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-hana-header via-hana-header-light to-hana-header p-5 text-white">
+  <div
+    class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-hana-header via-hana-header-light to-hana-header p-5 text-white"
+  >
     <div class="relative z-10">
       <h2 class="text-lg font-bold">歡迎回來，{{ profile.name }} 👋</h2>
       <p class="text-xs text-white/70 mt-0.5">
@@ -15,7 +17,9 @@
           <div class="text-[10px] text-white/60">待審核</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl font-bold text-hana-gold">NT${{ stats.monthlyRevenue.toLocaleString() }}</div>
+          <div class="text-2xl font-bold text-hana-gold">
+            NT${{ stats.monthlyRevenue.toLocaleString() }}
+          </div>
           <div class="text-[10px] text-white/60">本月分潤</div>
         </div>
       </div>

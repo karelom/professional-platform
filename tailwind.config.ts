@@ -21,13 +21,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: [
-          'Noto Sans TC',
-          'PingFang TC',
-          'system-ui',
-          '-apple-system',
-          'sans-serif',
-        ],
+        sans: ['Noto Sans TC', 'PingFang TC', 'system-ui', '-apple-system', 'sans-serif'],
       },
     },
   },

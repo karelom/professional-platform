@@ -68,7 +68,28 @@ export interface SettlementRecord {
 }
 
 export const settlements: SettlementRecord[] = [
-  { id: 's1', name: '花卉香氛蠟磚 分潤入帳', date: '2026/07/05', detail: '5件通過', amount: 700, icon: '💰' },
-  { id: 's2', name: '和紙膠帶卷 分潤入帳', date: '2026/06/28', detail: '8件通過', amount: 1040, icon: '💰' },
-  { id: 's3', name: '寄件運費補貼', date: '2026/06/20', detail: '已扣除運費', amount: -60, icon: '📦' },
+  {
+    id: 's1',
+    name: '花卉香氛蠟磚 分潤入帳',
+    date: '2026/07/05',
+    detail: '5件通過',
+    amount: 700,
+    icon: '💰',
+  },
+  {
+    id: 's2',
+    name: '和紙膠帶卷 分潤入帳',
+    date: '2026/06/28',
+    detail: '8件通過',
+    amount: 1040,
+    icon: '💰',
+  },
+  {
+    id: 's3',
+    name: '寄件運費補貼',
+    date: '2026/06/20',
+    detail: '已扣除運費',
+    amount: -60,
+    icon: '📦',
+  },
 ]

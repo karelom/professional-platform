@@ -14,14 +14,8 @@ import type {
   SettlementDTO,
   NotificationDTO,
 } from './dto'
-import {
-  OrderStatus,
-  ReviewStatus,
-  UserRole,
-  SettlementType,
-  ShippingStatus,
-  PaymentStatus,
-} from './enums'
+import type { ReviewStatus, UserRole, SettlementType, ShippingStatus, PaymentStatus } from './enums'
+import { OrderStatus } from './enums'
 
 export * from './enums'
 export type { CamelCaseKeys } from './utils'
@@ -48,7 +42,10 @@ export type Submission = Omit<CamelCaseKeys<SubmissionDTO>, 'reviewStatus'> & {
 }
 
 /** 分潤記錄（override 三個 enum 欄位） */
-export type Settlement = Omit<CamelCaseKeys<SettlementDTO>, 'type' | 'shippingStatus' | 'paymentStatus'> & {
+export type Settlement = Omit<
+  CamelCaseKeys<SettlementDTO>,
+  'type' | 'shippingStatus' | 'paymentStatus'
+> & {
   type: SettlementType
   shippingStatus: ShippingStatus
   paymentStatus: PaymentStatus

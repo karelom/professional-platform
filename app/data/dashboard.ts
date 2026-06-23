@@ -11,10 +11,34 @@ export const stats = {
 }
 
 export const quickActions = [
-  { icon: 'lucide:clipboard-list', label: '查看本期訂單', description: '點擊掃描 QR Code', to: '/scan', isNew: true },
-  { icon: 'lucide:bar-chart-3', label: '分潤進度', description: 'NT$4,280 待入帳', to: '/revenue', isNew: false },
-  { icon: 'lucide:truck', label: '寄件回基地', description: '審核通過後寄出', to: '/review', isNew: false },
-  { icon: 'lucide:graduation-cap', label: '學習資源', description: '美感訓練教材', to: '#', isNew: false },
+  {
+    icon: 'lucide:clipboard-list',
+    label: '查看本期訂單',
+    description: '點擊掃描 QR Code',
+    to: '/scan',
+    isNew: true,
+  },
+  {
+    icon: 'lucide:bar-chart-3',
+    label: '分潤進度',
+    description: 'NT$4,280 待入帳',
+    to: '/revenue',
+    isNew: false,
+  },
+  {
+    icon: 'lucide:truck',
+    label: '寄件回基地',
+    description: '審核通過後寄出',
+    to: '/review',
+    isNew: false,
+  },
+  {
+    icon: 'lucide:graduation-cap',
+    label: '學習資源',
+    description: '美感訓練教材',
+    to: '#',
+    isNew: false,
+  },
 ]
 
 export type TaskStatus = 'in-progress' | 'uploaded' | 'approved' | 'rejected'
@@ -30,9 +54,33 @@ export interface Task {
 }
 
 export const tasks: Task[] = [
-  { id: 'HY-2026-0714', name: '台灣藍鵲押花書籤', qty: 10, deadline: '2026/07/15', unitPrice: 85, status: 'in-progress', emoji: '🌸' },
-  { id: 'HY-2026-0711', name: '花卉香氛蠟磚', qty: 5, deadline: '2026/07/20', unitPrice: 140, status: 'uploaded', emoji: '🕯️' },
-  { id: 'HY-2026-0702', name: '刺繡名片夾', qty: 3, deadline: '2026/07/28', unitPrice: 320, status: 'approved', emoji: '🧵' },
+  {
+    id: 'HY-2026-0714',
+    name: '台灣藍鵲押花書籤',
+    qty: 10,
+    deadline: '2026/07/15',
+    unitPrice: 85,
+    status: 'in-progress',
+    emoji: '🌸',
+  },
+  {
+    id: 'HY-2026-0711',
+    name: '花卉香氛蠟磚',
+    qty: 5,
+    deadline: '2026/07/20',
+    unitPrice: 140,
+    status: 'uploaded',
+    emoji: '🕯️',
+  },
+  {
+    id: 'HY-2026-0702',
+    name: '刺繡名片夾',
+    qty: 3,
+    deadline: '2026/07/28',
+    unitPrice: 320,
+    status: 'approved',
+    emoji: '🧵',
+  },
 ]
 
 export const statusConfig: Record<TaskStatus, { label: string; class: string }> = {

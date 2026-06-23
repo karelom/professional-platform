@@ -6,8 +6,7 @@
     <div class="mt-3">
       <!-- Upload area -->
       <label
-        class="block border-2 border-dashed border-hana-border rounded-2xl p-8 text-center cursor-pointer
-               hover:border-hana-warning hover:bg-amber-50/30 transition-colors"
+        class="block border-2 border-dashed border-hana-border rounded-2xl p-8 text-center cursor-pointer hover:border-hana-warning hover:bg-amber-50/30 transition-colors"
       >
         <input
           ref="fileInput"
@@ -16,7 +15,7 @@
           multiple
           class="hidden"
           @change="onFileSelect"
-        >
+        />
         <Icon name="lucide:camera" class="w-10 h-10 text-hana-muted mx-auto" />
         <p class="text-sm font-medium text-hana-text mt-2">點擊拍照 / 選擇圖片</p>
         <p class="text-xs text-hana-muted mt-1">支援 JPG、PNG，建議自然光拍攝</p>
@@ -29,7 +28,7 @@
           :key="i"
           class="relative w-20 h-20 rounded-lg overflow-hidden border border-hana-border"
         >
-          <img :src="src" class="w-full h-full object-cover" alt="preview">
+          <img :src="src" class="w-full h-full object-cover" alt="preview" />
           <button
             class="absolute top-0.5 right-0.5 w-5 h-5 bg-black/50 rounded-full flex items-center justify-center"
             @click="removePreview(i)"
@@ -39,9 +38,7 @@
         </div>
       </div>
 
-      <p class="text-xs text-hana-muted mt-2">
-        📷 建議拍攝：正面全景 × 細節特寫 × 側面厚度
-      </p>
+      <p class="text-xs text-hana-muted mt-2">📷 建議拍攝：正面全景 × 細節特寫 × 側面厚度</p>
     </div>
   </div>
 </template>

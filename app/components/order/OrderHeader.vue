@@ -1,7 +1,9 @@
 <template>
   <div class="card p-4">
     <div class="flex gap-3">
-      <div class="w-14 h-14 rounded-xl bg-pink-50 flex items-center justify-center text-3xl flex-shrink-0">
+      <div
+        class="w-14 h-14 rounded-xl bg-pink-50 flex items-center justify-center text-3xl flex-shrink-0"
+      >
         {{ order.emoji }}
       </div>
       <div class="flex-1">
@@ -11,9 +13,7 @@
           <span>|</span>
           <span>單件分潤：NT${{ order.unitPrice }}</span>
         </div>
-        <div class="text-xs text-hana-muted mt-0.5">
-          截止日：{{ order.deadline }}
-        </div>
+        <div class="text-xs text-hana-muted mt-0.5">截止日：{{ order.deadline }}</div>
         <div class="flex gap-2 mt-2">
           <span
             v-for="tag in order.tags"

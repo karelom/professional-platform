@@ -17,12 +17,8 @@
       <OrderPhotoUpload />
 
       <div class="space-y-3 pb-6">
-        <button class="btn-primary" @click="submitReview">
-          📤 送出審核申請
-        </button>
-        <button class="btn-secondary" @click="saveDraft">
-          暫存草稿
-        </button>
+        <button class="btn-primary" @click="submitReview">📤 送出審核申請</button>
+        <button class="btn-secondary" @click="saveDraft">暫存草稿</button>
       </div>
     </template>
 
@@ -53,7 +49,9 @@ const order = computed(() => orders[route.params.id as string])
 const toastMessage = ref('')
 function showToast(msg: string) {
   toastMessage.value = msg
-  setTimeout(() => { toastMessage.value = '' }, 2000)
+  setTimeout(() => {
+    toastMessage.value = ''
+  }, 2000)
 }
 
 function submitReview() {

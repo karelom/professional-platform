@@ -18,7 +18,10 @@
             截止：{{ task.deadline }} · 單件 NT${{ task.unitPrice }}
           </div>
         </div>
-        <UiStatusBadge :label="statusConfig[task.status].label" :color-class="statusConfig[task.status].class" />
+        <UiStatusBadge
+          :label="statusConfig[task.status].label"
+          :color-class="statusConfig[task.status].class"
+        />
       </NuxtLink>
     </div>
   </div>

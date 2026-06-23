@@ -4,12 +4,22 @@
     <p class="section-subtitle">對準作品包裝上的 QR Code，自動載入製作講義</p>
 
     <div class="mt-6 flex justify-center">
-      <div class="relative w-64 h-64 bg-gray-900 rounded-2xl flex items-center justify-center overflow-hidden">
+      <div
+        class="relative w-64 h-64 bg-gray-900 rounded-2xl flex items-center justify-center overflow-hidden"
+      >
         <!-- Corner brackets -->
-        <div class="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-amber-400/80 rounded-tl" />
-        <div class="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-amber-400/80 rounded-tr" />
-        <div class="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-amber-400/80 rounded-bl" />
-        <div class="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-amber-400/80 rounded-br" />
+        <div
+          class="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-amber-400/80 rounded-tl"
+        />
+        <div
+          class="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-amber-400/80 rounded-tr"
+        />
+        <div
+          class="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-amber-400/80 rounded-bl"
+        />
+        <div
+          class="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-amber-400/80 rounded-br"
+        />
 
         <!-- Scan line animation -->
         <div
@@ -42,10 +52,8 @@
           type="text"
           placeholder="輸入訂單編號"
           class="w-full px-4 py-2.5 rounded-lg border border-hana-border text-sm focus:outline-none focus:border-hana-warning"
-        >
-        <button class="btn-primary" @click="goToOrder">
-          確認
-        </button>
+        />
+        <button class="btn-primary" @click="goToOrder">確認</button>
       </div>
     </div>
   </div>
@@ -73,9 +81,15 @@ function goToOrder() {
 
 <style scoped>
 @keyframes scan {
-  0% { top: 1.5rem; }
-  50% { top: calc(100% - 1.5rem); }
-  100% { top: 1.5rem; }
+  0% {
+    top: 1.5rem;
+  }
+  50% {
+    top: calc(100% - 1.5rem);
+  }
+  100% {
+    top: 1.5rem;
+  }
 }
 .animate-scan {
   animation: scan 2s ease-in-out infinite;

@@ -1,21 +1,25 @@
 <template>
-  <div
-    class="card p-4 transition-all duration-300"
-    :class="reviewStatusConfig[status].cardClass"
-  >
+  <div class="card p-4 transition-all duration-300" :class="reviewStatusConfig[status].cardClass">
     <div class="flex items-start justify-between">
       <div class="flex gap-3">
-        <div class="w-11 h-11 rounded-xl bg-pink-50 flex items-center justify-center text-2xl flex-shrink-0">
+        <div
+          class="w-11 h-11 rounded-xl bg-pink-50 flex items-center justify-center text-2xl flex-shrink-0"
+        >
           {{ item.emoji }}
         </div>
         <div>
-          <div class="text-sm font-bold text-hana-text">{{ item.productName }} · {{ item.artisanName }}</div>
+          <div class="text-sm font-bold text-hana-text">
+            {{ item.productName }} · {{ item.artisanName }}
+          </div>
           <div class="text-xs text-hana-muted mt-0.5">
             {{ status === 'pending' ? '上傳' : '審核' }}時間：{{ item.uploadTime }}
           </div>
         </div>
       </div>
-      <UiStatusBadge :label="reviewStatusConfig[status].label" :color-class="reviewStatusConfig[status].class" />
+      <UiStatusBadge
+        :label="reviewStatusConfig[status].label"
+        :color-class="reviewStatusConfig[status].class"
+      />
     </div>
 
     <!-- Photo thumbnails -->

@@ -8,7 +8,9 @@
         </div>
       </div>
       <div class="text-right">
-        <div class="text-base font-bold text-hana-gold">NT${{ data.totalPrice.toLocaleString() }}</div>
+        <div class="text-base font-bold text-hana-gold">
+          NT${{ data.totalPrice.toLocaleString() }}
+        </div>
         <div class="text-[10px] text-hana-muted">{{ data.unitLabel }}</div>
       </div>
     </div>

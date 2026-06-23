@@ -20,10 +20,7 @@ function convertKeys(obj: unknown, converter: (key: string) => string): unknown 
   }
   if (obj !== null && typeof obj === 'object' && !(obj instanceof Date)) {
     return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        converter(key),
-        convertKeys(value, converter),
-      ]),
+      Object.entries(obj).map(([key, value]) => [converter(key), convertKeys(value, converter)]),
     )
   }
   return obj

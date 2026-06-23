@@ -9,9 +9,11 @@
         v-for="f in filters"
         :key="f.key"
         class="px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200"
-        :class="activeFilter === f.key
-          ? 'bg-hana-text text-white'
-          : 'bg-hana-card text-hana-muted border border-hana-border'"
+        :class="
+          activeFilter === f.key
+            ? 'bg-hana-text text-white'
+            : 'bg-hana-card text-hana-muted border border-hana-border'
+        "
         @click="activeFilter = f.key"
       >
         {{ f.label }}
@@ -104,7 +106,9 @@ function openLightbox() {
 const toastMessage = ref('')
 function showToast(msg: string) {
   toastMessage.value = msg
-  setTimeout(() => { toastMessage.value = '' }, 2000)
+  setTimeout(() => {
+    toastMessage.value = ''
+  }, 2000)
 }
 </script>
 
