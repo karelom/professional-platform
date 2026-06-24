@@ -23,46 +23,34 @@ export function useAuth() {
   const isArtisan = computed(() => profile.value?.role === UserRole.ARTISAN)
   const isLoggedIn = computed(() => !!user.value)
 
-  /**
-   * 載入用戶 profile（有快取，同一 user 不重複請求）
-   * @param force 強制重新載入（忽略快取）
-   */
-  async function fetchProfile(force: boolean = false) {
-    const {
-      data: { user: authUser },
-    } = await supabase.auth.getUser()
+  function applyProfile(dto: ProfileDTO) {
+    profile.value = {
+      id: dto.id,
+      name: dto.name,
+      phone: dto.phone,
+      role: dto.role as UserRole,
+      isActive: dto.is_active,
+    }
+  }
 
-    if (!authUser) {
+  async function fetchProfileBySession(force: boolean = false) {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    if (!session) {
       profile.value = null
       return
     }
 
-    if (!force && profile.value?.id === authUser.id) {
+    if (!force && profile.value?.id === session.user.id) {
       return
     }
 
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, name, phone, role, is_active')
-      .eq('id', authUser.id)
-      .single<ProfileDTO>()
-
-    if (error) {
-      console.error('[useAuth] fetchProfile failed:', error.message, '| user.id:', authUser.id)
-      return
-    }
-
-    if (data) {
-      profile.value = {
-        id: data.id,
-        name: data.name,
-        phone: data.phone,
-        role: data.role as UserRole,
-        isActive: data.is_active,
-      }
-    } else {
-      console.warn('[useAuth] no profile found for user', authUser.id)
-    }
+    const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+    applyProfile(dto)
   }
 
   /**
@@ -76,15 +64,20 @@ export function useAuth() {
     if (error) throw error
   }
 
-  /** 驗證 OTP 並登入 */
   async function verifyOtp(identifier: string, token: string) {
     const payload =
       authMode === 'email'
         ? { email: identifier, token, type: 'email' as const }
         : { phone: identifier, token, type: 'sms' as const }
-    const { error } = await supabase.auth.verifyOtp(payload)
+    const { data, error } = await supabase.auth.verifyOtp(payload)
     if (error) throw error
-    await fetchProfile()
+
+    if (data.session) {
+      const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
+        headers: { Authorization: `Bearer ${data.session.access_token}` },
+      })
+      applyProfile(dto)
+    }
   }
 
   /** 登出 */
@@ -100,7 +93,7 @@ export function useAuth() {
     isAdmin,
     isArtisan,
     isLoggedIn,
-    fetchProfile,
+    fetchProfileBySession,
     sendOtp,
     verifyOtp,
     signOut,

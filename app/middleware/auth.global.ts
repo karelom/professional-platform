@@ -6,11 +6,11 @@
  */
 export default defineNuxtRouteMiddleware(async (to) => {
   const user = useSupabaseUser()
-  const { profile, fetchProfile, signOut } = useAuth()
+  const { profile, fetchProfileBySession, signOut } = useAuth()
   const { denyWith } = useGuard()
-  const publicPages = ['/login', '/confirm']
+  const publicPages = ['/login']
 
-  if (!user.value && !publicPages.includes(to.path)) {
+  if (!user.value && !profile.value && !publicPages.includes(to.path)) {
     return denyWith('請先登入', '/login')
   }
 
@@ -19,7 +19,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (user.value && !profile.value) {
-    await fetchProfile()
+    await fetchProfileBySession()
 
     if (!profile.value) {
       await signOut()
