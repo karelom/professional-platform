@@ -63,8 +63,8 @@ onMounted(async () => {
     const [artisans, products] = await Promise.all([fetchArtisans(), fetchProducts()])
     artisanCount.value = artisans.length
     productCount.value = products.length
-  } catch {
-    // 統計失敗不影響導航
+  } catch (e) {
+    console.error('[admin] 統計載入失敗', e)
   }
 })
 </script>

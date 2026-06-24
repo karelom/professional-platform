@@ -47,10 +47,15 @@ export function useAuth() {
       return
     }
 
-    const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    })
-    applyProfile(dto)
+    try {
+      const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      applyProfile(dto)
+    } catch (e) {
+      console.error('[useAuth] fetchProfileBySession failed:', e)
+      profile.value = null
+    }
   }
 
   /**
@@ -73,10 +78,15 @@ export function useAuth() {
     if (error) throw error
 
     if (data.session) {
-      const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
-        headers: { Authorization: `Bearer ${data.session.access_token}` },
-      })
-      applyProfile(dto)
+      try {
+        const dto = await $fetch<ProfileDTO>('/api/auth/profile', {
+          headers: { Authorization: `Bearer ${data.session.access_token}` },
+        })
+        applyProfile(dto)
+      } catch (e) {
+        console.error('[useAuth] verifyOtp profile fetch failed:', e)
+        throw new Error('登入成功但無法載入用戶資料', { cause: e })
+      }
     }
   }
 
