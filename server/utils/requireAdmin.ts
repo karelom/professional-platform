@@ -7,12 +7,13 @@ export async function requireAdmin(event: H3Event) {
   const user = await serverSupabaseUser(event)
   if (!user) throw createError({ statusCode: 401, message: '未登入' })
 
+  const userId = (user as { sub?: string }).sub ?? user.id
   const supabase = serverSupabaseServiceRole(event)
 
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
-    .eq('id', user.id)
+    .eq('id', userId)
     .single<{ role: string }>()
 
   if (profile?.role !== UserRole.ADMIN) {
