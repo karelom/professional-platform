@@ -1,5 +1,6 @@
 import type { H3Event } from 'h3'
 import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
+import { UserRole } from '~/types'
 
 /** 驗證請求者為已登入的管理員，回傳 service_role client */
 export async function requireAdmin(event: H3Event) {
@@ -14,7 +15,7 @@ export async function requireAdmin(event: H3Event) {
     .eq('id', user.id)
     .single<{ role: string }>()
 
-  if (profile?.role !== 'admin') {
+  if (profile?.role !== UserRole.ADMIN) {
     throw createError({ statusCode: 403, message: '權限不足' })
   }
 

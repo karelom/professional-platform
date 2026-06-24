@@ -1,5 +1,6 @@
 import type { ProfileDTO, SubmissionDTO } from '~/types/dto'
-import type { Profile, UserRole } from '~/types'
+import { UserRole } from '~/types'
+import type { Profile } from '~/types'
 
 /** 職人帳號管理（管理員用） */
 export function useArtisans() {
@@ -9,7 +10,7 @@ export function useArtisans() {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
-      .eq('role', 'artisan')
+      .eq('role', UserRole.ARTISAN)
       .order('created_at', { ascending: false })
       .returns<ProfileDTO[]>()
 
