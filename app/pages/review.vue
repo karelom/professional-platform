@@ -30,7 +30,7 @@
           :status="statusOverrides[item.id] ?? item.status"
           @approve="setStatus(item.id, 'approved')"
           @reject="setStatus(item.id, 'rejected')"
-          @notify="showToast('📦 已通知職人寄件')"
+          @notify="toast.show('📦 已通知職人寄件')"
           @view-photo="openLightbox"
         />
       </TransitionGroup>
@@ -58,10 +58,10 @@
     <!-- Toast -->
     <Transition name="toast">
       <div
-        v-if="toastMessage"
+        v-if="toast.message"
         class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-hana-text text-white text-sm px-5 py-2.5 rounded-full shadow-lg z-50"
       >
-        {{ toastMessage }}
+        {{ toast.message }}
       </div>
     </Transition>
   </div>
@@ -95,7 +95,7 @@ const filteredItems = computed(() => {
 
 function setStatus(id: string, status: ReviewStatus) {
   statusOverrides.value[id] = status
-  showToast(status === 'approved' ? '✅ 已通過審核' : '❌ 已退件')
+  toast.show(status === 'approved' ? '✅ 已通過審核' : '❌ 已退件')
 }
 
 const showLightbox = ref(false)
@@ -103,13 +103,7 @@ function openLightbox() {
   showLightbox.value = true
 }
 
-const toastMessage = ref('')
-function showToast(msg: string) {
-  toastMessage.value = msg
-  setTimeout(() => {
-    toastMessage.value = ''
-  }, 2000)
-}
+const toast = useToast()
 </script>
 
 <style scoped>

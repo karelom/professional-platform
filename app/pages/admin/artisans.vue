@@ -50,10 +50,10 @@
     <!-- Toast -->
     <Transition name="toast">
       <div
-        v-if="toastMsg"
+        v-if="toast.message"
         class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-hana-text text-white text-sm px-5 py-2.5 rounded-full shadow-lg z-50"
       >
-        {{ toastMsg }}
+        {{ toast.message }}
       </div>
     </Transition>
   </div>
@@ -72,14 +72,7 @@ const artisans = ref<Profile[]>([])
 const stats = ref<
   Record<string, { totalSubmissions: number; approvalRate: number; rejectionRate: number }>
 >({})
-const toastMsg = ref('')
-
-function showToast(msg: string) {
-  toastMsg.value = msg
-  setTimeout(() => {
-    toastMsg.value = ''
-  }, 2000)
-}
+const toast = useToast()
 
 async function loadStats(list: Profile[]) {
   const results = await Promise.all(list.map((a) => fetchArtisanStats(a.id)))
@@ -91,13 +84,13 @@ async function loadStats(list: Profile[]) {
 async function refresh() {
   artisans.value = await refreshArtisans()
   await loadStats(artisans.value)
-  showToast('已更新')
+  toast.show('已更新')
 }
 
 async function handleToggle(artisan: Profile) {
   const newState = !artisan.isActive
   await toggleActive(artisan.id, newState)
-  showToast(newState ? `已啟用 ${artisan.name}` : `已停用 ${artisan.name}`)
+  toast.show(newState ? `已啟用 ${artisan.name}` : `已停用 ${artisan.name}`)
   await refresh()
 }
 

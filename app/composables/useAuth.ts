@@ -71,36 +71,19 @@ export function useAuth() {
    * - phone 模式：發送 SMS OTP
    */
   async function sendOtp(identifier: string) {
-    if (authMode === 'email') {
-      const { error } = await supabase.auth.signInWithOtp({ email: identifier })
-      if (error) throw error
-    } else {
-      const { error } = await supabase.auth.signInWithOtp({ phone: identifier })
-      if (error) throw error
-    }
+    const payload = authMode === 'email' ? { email: identifier } : { phone: identifier }
+    const { error } = await supabase.auth.signInWithOtp(payload)
+    if (error) throw error
   }
 
-  /**
-   * 驗證 OTP 並登入
-   * @param identifier Email 或手機號碼
-   * @param token 6 位驗證碼
-   */
+  /** 驗證 OTP 並登入 */
   async function verifyOtp(identifier: string, token: string) {
-    if (authMode === 'email') {
-      const { error } = await supabase.auth.verifyOtp({
-        email: identifier,
-        token,
-        type: 'email',
-      })
-      if (error) throw error
-    } else {
-      const { error } = await supabase.auth.verifyOtp({
-        phone: identifier,
-        token,
-        type: 'sms',
-      })
-      if (error) throw error
-    }
+    const payload =
+      authMode === 'email'
+        ? { email: identifier, token, type: 'email' as const }
+        : { phone: identifier, token, type: 'sms' as const }
+    const { error } = await supabase.auth.verifyOtp(payload)
+    if (error) throw error
     await fetchProfile()
   }
 

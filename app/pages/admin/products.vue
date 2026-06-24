@@ -63,10 +63,10 @@
     <!-- Toast -->
     <Transition name="toast">
       <div
-        v-if="toastMsg"
+        v-if="toast.message"
         class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-hana-text text-white text-sm px-5 py-2.5 rounded-full shadow-lg z-50"
       >
-        {{ toastMsg }}
+        {{ toast.message }}
       </div>
     </Transition>
   </div>
@@ -83,14 +83,7 @@ const { fetchProducts, refreshProducts, deleteProduct } = useProducts()
 
 const products = ref<Product[]>([])
 const editingProduct = ref<Product | null>(null)
-const toastMsg = ref('')
-
-function showToast(msg: string) {
-  toastMsg.value = msg
-  setTimeout(() => {
-    toastMsg.value = ''
-  }, 2000)
-}
+const toast = useToast()
 
 async function refresh() {
   products.value = await refreshProducts()
@@ -105,16 +98,16 @@ async function handleDelete(product: Product) {
   if (!confirm(`確定要刪除「${product.name}」嗎？此操作無法還原。`)) return
   try {
     await deleteProduct(product.id)
-    showToast(`已刪除「${product.name}」`)
+    toast.show(`已刪除「${product.name}」`)
     await refresh()
   } catch (e: unknown) {
-    showToast(e instanceof Error ? e.message : '刪除失敗')
+    toast.show(e instanceof Error ? e.message : '刪除失敗')
   }
 }
 
 async function handleSaved() {
   editingProduct.value = null
-  showToast('已儲存')
+  toast.show('已儲存')
   await refresh()
 }
 

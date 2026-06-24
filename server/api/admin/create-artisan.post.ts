@@ -1,21 +1,6 @@
-import { serverSupabaseServiceRole, serverSupabaseUser } from '#supabase/server'
-
 /** 管理員建立職人帳號（需 service_role 權限） */
 export default defineEventHandler(async (event) => {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, message: '未登入' })
-
-  const supabase = serverSupabaseServiceRole(event)
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single<{ role: string }>()
-
-  if (profile?.role !== 'admin') {
-    throw createError({ statusCode: 403, message: '權限不足' })
-  }
+  const { supabase } = await requireAdmin(event)
 
   const body = await readBody<{ phone: string; name: string; email?: string }>(event)
 

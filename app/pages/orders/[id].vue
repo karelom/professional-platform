@@ -29,10 +29,10 @@
     <!-- Toast -->
     <Transition name="toast">
       <div
-        v-if="toastMessage"
+        v-if="toast.message"
         class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-hana-text text-white text-sm px-5 py-2.5 rounded-full shadow-lg z-50"
       >
-        {{ toastMessage }}
+        {{ toast.message }}
       </div>
     </Transition>
   </div>
@@ -46,20 +46,14 @@ const router = useRouter()
 
 const order = computed(() => orders[route.params.id as string])
 
-const toastMessage = ref('')
-function showToast(msg: string) {
-  toastMessage.value = msg
-  setTimeout(() => {
-    toastMessage.value = ''
-  }, 2000)
-}
+const toast = useToast()
 
 function submitReview() {
-  showToast('✅ 已送出審核申請！')
+  toast.show('✅ 已送出審核申請！')
 }
 
 function saveDraft() {
-  showToast('📝 已暫存草稿')
+  toast.show('📝 已暫存草稿')
 }
 </script>
 
