@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-gradient-to-r from-hana-header to-hana-header-light px-3 pb-3">
+  <nav class="bg-gradient-to-r from-hana-header to-hana-header-light px-3 pt-1 pb-safe">
     <div class="flex gap-1">
       <NuxtLink
         v-for="tab in tabs"
