@@ -29,7 +29,7 @@ const tabs = computed(() => {
     return [
       ...common,
       { icon: 'lucide:check-square', label: '審核管理', to: '/review' },
-      { icon: 'lucide:settings', label: '訂單管理', to: '/admin/orders' },
+      { icon: 'lucide:settings', label: '管理', to: '/admin' },
     ]
   }
 
