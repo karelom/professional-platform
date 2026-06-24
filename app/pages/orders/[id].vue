@@ -56,15 +56,3 @@ function saveDraft() {
   toast.show('📝 已暫存草稿')
 }
 </script>
-
-<style scoped>
-.toast-enter-active,
-.toast-leave-active {
-  transition: all 0.3s ease;
-}
-.toast-enter-from,
-.toast-leave-to {
-  opacity: 0;
-  transform: translate(-50%, 1rem);
-}
-</style>
