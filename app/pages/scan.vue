@@ -75,7 +75,7 @@ async function simulateScan() {
 }
 
 function goToOrder() {
-  router.push(`/orders/${defaultOrderId}`)
+  router.push(`/orders/${manualOrderId.value}`)
 }
 </script>
 
