@@ -5,8 +5,7 @@ import type { Product, InstructionItem } from '~/types'
 export function useProducts() {
   const supabase = useSupabaseClient()
 
-  /** 取得所有商品模板 */
-  async function fetchProducts(): Promise<Product[]> {
+  const cache = useCache<Product>('products-cache', async () => {
     const { data, error } = await supabase
       .from('products')
       .select('*')
@@ -15,9 +14,9 @@ export function useProducts() {
 
     if (error) throw error
     return (data ?? []).map((d) => snakeToCamel<Product>(d))
-  }
+  })
 
-  /** 取得單一商品模板 */
+  /** 取得單一商品模板（不走快取，直接查 DB） */
   async function fetchProduct(id: string): Promise<Product | null> {
     const { data, error } = await supabase
       .from('products')
@@ -56,6 +55,7 @@ export function useProducts() {
       .single<ProductDTO>()
 
     if (error) throw error
+    cache.invalidate()
     return snakeToCamel<Product>(data)
   }
 
@@ -88,6 +88,7 @@ export function useProducts() {
       .single<ProductDTO>()
 
     if (error) throw error
+    cache.invalidate()
     return snakeToCamel<Product>(data)
   }
 
@@ -97,10 +98,12 @@ export function useProducts() {
     const { error } = await (supabase.from('products') as any).delete().eq('id', id)
 
     if (error) throw error
+    cache.invalidate()
   }
 
   return {
-    fetchProducts,
+    fetchProducts: cache.fetch,
+    refreshProducts: cache.refresh,
     fetchProduct,
     createProduct,
     updateProduct,

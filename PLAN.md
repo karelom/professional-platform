@@ -170,7 +170,9 @@ app/
 │   ├── dto.ts                           # 鏡像 DB snake_case（文件用途）
 │   ├── utils.ts                         # CamelCaseKeys<T> 型別轉換器
 │   └── index.ts                         # 前端 Model = CamelCaseKeys<DTO> + enum override
-├── utils/caseConverter.ts               # snakeToCamel / camelToSnake
+├── utils/
+│   ├── caseConverter.ts                 # snakeToCamel / camelToSnake
+│   └── useCache.ts                      # Generic cache: fetch / refresh / invalidate
 └── data/                                # Demo mock data（待刪除，被 composable + DB 取代）
 
 server/api/admin/
@@ -205,3 +207,5 @@ server/api/admin/
 11. **Profile 載入散布多處 → 時序問題**：收攏到 auth.global.ts 單一入口。
 12. **Supabase 免費 email 3 封/小時**：接 Resend SMTP 解除。
 13. **Magic link 轉導失敗**：加 `/confirm` 頁面 + 排除在 auth middleware 外。
+14. **Admin hub 每次進入重複打 API**：composable 只做 API 包裝沒有快取層，快取責任散落在頁面端且不一致 → 抽出 `utils/useCache.ts` generic function，composable 統一整合，頁面端不再自行管理快取狀態。
+15. **Export 了未被引用的方法**：`invalidateProducts` / `invalidateArtisans` 被 export 但無人呼叫，因為 mutation 方法內部已自動 invalidate → 移除多餘 export。原則：內部已處理的邏輯不對外暴露，交付前 `grep` 確認。

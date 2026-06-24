@@ -5,8 +5,7 @@ import type { Profile, UserRole } from '~/types'
 export function useArtisans() {
   const supabase = useSupabaseClient()
 
-  /** 取得所有職人列表 */
-  async function fetchArtisans(): Promise<Profile[]> {
+  const cache = useCache<Profile>('artisans-cache', async () => {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -23,7 +22,7 @@ export function useArtisans() {
       isActive: d.is_active,
       createdAt: d.created_at,
     }))
-  }
+  })
 
   /** 新增職人帳號（透過 server API，使用 service_role） */
   async function createArtisan(input: { phone: string; name: string; email?: string }) {
@@ -32,6 +31,7 @@ export function useArtisans() {
       body: input,
     })
     if (error.value) throw new Error(error.value.data?.message || '建立失敗')
+    cache.invalidate()
     return data.value
   }
 
@@ -42,6 +42,7 @@ export function useArtisans() {
       body: { artisanId, isActive },
     })
     if (error.value) throw new Error(error.value.data?.message || '操作失敗')
+    cache.invalidate()
   }
 
   /** 取得某職人的退件率統計 */
@@ -68,7 +69,8 @@ export function useArtisans() {
   }
 
   return {
-    fetchArtisans,
+    fetchArtisans: cache.fetch,
+    refreshArtisans: cache.refresh,
     createArtisan,
     toggleActive,
     fetchArtisanStats,

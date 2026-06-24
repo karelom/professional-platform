@@ -79,7 +79,7 @@ definePageMeta({
   middleware: ['admin'],
 })
 
-const { fetchProducts, deleteProduct } = useProducts()
+const { fetchProducts, refreshProducts, deleteProduct } = useProducts()
 
 const products = ref<Product[]>([])
 const editingProduct = ref<Product | null>(null)
@@ -93,7 +93,7 @@ function showToast(msg: string) {
 }
 
 async function refresh() {
-  products.value = await fetchProducts()
+  products.value = await refreshProducts()
 }
 
 function handleEdit(product: Product) {
@@ -118,5 +118,7 @@ async function handleSaved() {
   await refresh()
 }
 
-onMounted(() => refresh())
+onMounted(async () => {
+  products.value = await fetchProducts()
+})
 </script>

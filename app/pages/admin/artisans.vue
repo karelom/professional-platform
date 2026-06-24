@@ -66,7 +66,7 @@ definePageMeta({
   middleware: ['admin'],
 })
 
-const { fetchArtisans, toggleActive, fetchArtisanStats } = useArtisans()
+const { fetchArtisans, refreshArtisans, toggleActive, fetchArtisanStats } = useArtisans()
 
 const artisans = ref<Profile[]>([])
 const stats = ref<
@@ -81,11 +81,16 @@ function showToast(msg: string) {
   }, 2000)
 }
 
+async function loadStats(list: Profile[]) {
+  const results = await Promise.all(list.map((a) => fetchArtisanStats(a.id)))
+  list.forEach((a, i) => {
+    stats.value[a.id] = results[i]!
+  })
+}
+
 async function refresh() {
-  artisans.value = await fetchArtisans()
-  for (const a of artisans.value) {
-    stats.value[a.id] = await fetchArtisanStats(a.id)
-  }
+  artisans.value = await refreshArtisans()
+  await loadStats(artisans.value)
   showToast('已更新')
 }
 
@@ -96,5 +101,8 @@ async function handleToggle(artisan: Profile) {
   await refresh()
 }
 
-onMounted(() => refresh())
+onMounted(async () => {
+  artisans.value = await fetchArtisans()
+  await loadStats(artisans.value)
+})
 </script>
