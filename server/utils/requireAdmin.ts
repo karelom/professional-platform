@@ -4,10 +4,11 @@ import { UserRole } from '~/types'
 
 /** 驗證請求者為已登入的管理員，回傳 service_role client */
 export async function requireAdmin(event: H3Event) {
-  const user = await serverSupabaseUser(event)
-  if (!user) throw createError({ statusCode: 401, message: '未登入' })
+  const jwtUser = await serverSupabaseUser(event)
+  if (!jwtUser) throw createError({ statusCode: 401, message: '未登入' })
 
-  const userId = (user as { sub?: string }).sub ?? user.id
+  // serverSupabaseUser 回傳 JWT payload，user ID 在 sub 欄位
+  const userId = (jwtUser as { sub: string }).sub
   const supabase = serverSupabaseServiceRole(event)
 
   const { data: profile } = await supabase
@@ -20,5 +21,5 @@ export async function requireAdmin(event: H3Event) {
     throw createError({ statusCode: 403, message: '權限不足' })
   }
 
-  return { user, supabase }
+  return { userId, supabase }
 }
